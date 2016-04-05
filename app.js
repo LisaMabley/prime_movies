@@ -2,16 +2,15 @@ $(function() {
   // Add click listener for movies not on page yet
   // TODO: toggle animation on click -- make it go back
   $('body').on('click', '.movie', function() {
-    $(this).find('.detailListing').toggle();
-    $(this).find('img').toggleClass('thumb')
-    $(this).find('img').toggleClass('detailThumb');
-    $(this).animate({
-      width: '80%',
-      padding: '+=28px'
-    });
+    if ($(this).hasClass('wide')) {
+      animateHide($(this));
+
+    } else {
+      animateShow($(this));
+    }
   });
 
-  // Add click listener to button
+  // Add click listener to add button
   $('#addButton').on('click', function(){
     getMovieObject($('input').val());
     $('input').val('');
@@ -20,19 +19,38 @@ $(function() {
   addBaseTitles();
 });
 
+function animateShow(movieArticle) {
+  movieArticle.addClass('wide');
+  movieArticle.find('.detailListing').show();
+  movieArticle.find('img').removeClass('thumb').addClass('detailThumb');
+  movieArticle.animate({
+    width: '80%',
+    padding: '+=28px'
+  });
+}
+
+function animateHide(movieArticle) {
+  movieArticle.removeClass('wide');
+  movieArticle.find('.detailListing').hide();
+  movieArticle.find('img').removeClass('detailThumb').addClass('thumb');
+  movieArticle.animate({
+    width: '15%',
+    padding: '-=28px'
+  });
+}
+
 function addBaseTitles() {
   // Display these titles by default
   getMovieObject('Muppet Movie', 'The Film That I Tried to Recreate On Roadtrips Forever After');
-  getMovieObject('Labyrinth', 'I Really, Really Wanted to Be that Girl. Also, Bowie');
+  getMovieObject('Labyrinth', 'I Really, Really Wanted to Be that Girl. Also, Bowie.');
   getMovieObject('Spirited Away', 'The Only DVD I Own');
   getMovieObject('Lagaan', 'Longest Film I Ever Loved');
-  getMovieObject('Business of Being Born', 'The Film That Influenced Me to Have a Homebirth');
-  getMovieObject('Fat Sick Nearly Dead', 'The Film That Influenced Me to Drink a Green Smoothie Every Day');
+  getMovieObject('Business of Being Born', 'Why My Baby Was Born at Home');
+  getMovieObject('Fat Sick Nearly Dead', 'Why I Drink a Green Smoothie Every Day');
   getMovieObject('The Sound of Music', 'The One That I Can Sing Along with Every Word');
   getMovieObject('The Matrix', 'The Only Movie I Ever Watched Twice -- In A Row');
   getMovieObject('Memento', 'The One I Waited At Least Three Hours to See At Sundance Film Festival');
   getMovieObject('Blade Runner', 'MMmmm, Dystopia ...');
-  getMovieObject('Fight Club', 'The One That Messed With My Head');
   getMovieObject('The Exorcist', 'The Scariest Movie I Ever Saw On TV When I Was Home Alone and Way Too Young -- And Why The Hell Was A Rated R Movie Showing at that Time, Anyway?');
 }
 
@@ -83,7 +101,7 @@ function addTitleDisplay(movieObject, significance) {
   var imageHtml = '<img class="thumb" src="' + movieObject.Poster + '" alt="movie poster"/>';
   var titleHtml = '<h2>' + movieObject.Title + '</h2>';
   if (significance) {
-    titleHtml += '<h4>' + significance + '</h4>';
+    titleHtml += '<h3>' + significance + '</h3>';
   }
   var bodyHtml = '';
 
@@ -96,7 +114,7 @@ function addTitleDisplay(movieObject, significance) {
   var keysForNeededLongDetailText = ['Writer', 'Actors', 'Genre', 'Plot'];
   for (it in keysForNeededLongDetailText) {
     var key = keysForNeededLongDetailText[it];
-    bodyHtml += '<h3>' + key + '</h3>';
+    bodyHtml += '<h4>' + key + '</h4>';
     bodyHtml += '<p>' + movieObject[key] + '</p>';
   }
 
